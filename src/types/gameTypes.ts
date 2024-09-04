@@ -53,4 +53,4 @@ type State =
   | ModifierState
   | ChallengeState;
 
-export type { GameState, State, Player };
+export type { JoinState, GameState, State, Player };

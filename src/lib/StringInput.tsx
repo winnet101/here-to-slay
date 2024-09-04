@@ -4,10 +4,12 @@ export default function StringInput({
   onSubmit,
   clearOnSubmit = true,
   enterSubmit = true,
+  acceptEmpty = false
 }: {
   onSubmit: (value: string) => void;
   clearOnSubmit?: boolean;
   enterSubmit?: boolean;
+  acceptEmpty?: boolean;
 }) {
   const [value, setValue] = useState("");
 
@@ -22,6 +24,7 @@ export default function StringInput({
   }
 
   function handleSubmit() {
+    if (!acceptEmpty && !value.trim()) return;
     if (clearOnSubmit) setValue("");
     onSubmit(value);
   }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import StringInput from "./lib/StringInput";
-import { GameState, State } from "./types/gameTypes";
-import { useHostState } from "./react-use-peer-state";
-import { toRemoved } from "./utils";
+import StringInput from "../lib/StringInput";
+import { State } from "../types/gameTypes";
+import { useHostState } from "../hooks/react-use-peer-state";
+import { toRemoved } from "../utils";
 
 export default function Host() {
   const [id, setId] = useState<string>();
@@ -25,8 +25,11 @@ export default function Host() {
 
       conn.on("close", () => {
         if (state.kind !== "join") return;
-        setState({...state, players: toRemoved(state.players, conn.label)})
-      })
+        setState({
+          ...state,
+          players: [name, ...toRemoved(state.players, conn.label)],
+        });
+      });
     });
 
     return () => {
@@ -36,7 +39,7 @@ export default function Host() {
         connection.off("error");
       });
     };
-  });
+  }, [connections]);
 
   return (
     <>
@@ -45,16 +48,35 @@ export default function Host() {
       <StringInput onSubmit={setId} />
       {connections ? (
         <>
-          <p>{connections.length} connected</p>
-          <code> [{connections.map((con) => con.label)}]</code> <br></br>
+          <code> [{state.kind === "join" && state.players.join(", ")}]</code>{" "}
+          <br></br>
         </>
       ) : (
         <p>None are connected</p>
       )}
       <p>
         Current name: {name}{" "}
-        <StringInput onSubmit={(name) => setName(name.trim())} />
+        <StringInput
+          onSubmit={(newName) => {
+            if (state.kind !== "join") return;
+            setName(newName);
+            setState({
+              ...state,
+              players: toRemoved([...state.players, newName], name),
+            });
+            // toRemoved([...], name): removes old name
+            // [...state.players, newName]: adds new name
+          }}
+        />
       </p>
+      <button
+        onClick={() => {
+          if (state.kind !== "join") return;
+          setState({ kind: "assign", players: state.players.map((p) => ({name: p, partyLeader: ""})) });
+        }}
+      >
+        Start Game
+      </button>
     </>
   );
 }

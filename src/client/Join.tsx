@@ -1,7 +1,7 @@
 import { useState } from "react";
-import StringInput from "./lib/StringInput";
-import { State } from "./types/gameTypes";
-import { useClientState } from "./react-use-peer-state";
+import StringInput from "../lib/StringInput";
+import { State } from "../types/gameTypes";
+import { useClientState } from "../hooks/react-use-peer-state";
 
 export default function Client() {
   const [host, setHost] = useState<string>();
@@ -16,16 +16,13 @@ export default function Client() {
       <h3>CLIENT</h3>
       <p>
         {name ? `Current name: ${name}` : "Choose a name"}{" "}
-        <StringInput
-          onSubmit={(name) => {
-            name.trim() && setName(name.trim());
-          }}
-        />
+        <StringInput onSubmit={(name) => setName(name)} />
       </p>
 
       {connected ? (
         <>
           <p>Connected</p>
+          <code>{state?.kind === "join" && state.players}</code>
         </>
       ) : (
         <>
