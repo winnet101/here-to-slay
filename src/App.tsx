@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Host from "./host/Join";
-import Client from "./client/Join";
+import Host from "./Host";
+import Client from "./client/Client";
 
 export default function App() {
   const [isHost, setIsHost] = useState(false);

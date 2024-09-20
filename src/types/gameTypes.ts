@@ -1,4 +1,10 @@
+import { DataConnection } from "peerjs";
 import { Card, Monster } from "./cardTypes";
+
+interface AssignPlayer {
+  name: string;
+  partyLeader: string;
+}
 
 interface Player {
   name: string;
@@ -21,7 +27,7 @@ interface JoinState extends BaseState {
 
 interface AssignState extends BaseState {
   kind: "assign";
-  players: { name: string; partyLeader: string }[];
+  players: AssignPlayer[];
 }
 
 interface GameState extends BaseState {
@@ -53,4 +59,19 @@ type State =
   | ModifierState
   | ChallengeState;
 
-export type { JoinState, GameState, State, Player };
+interface ReactNodeState<T extends State> {
+  state: T;
+  setState: (state: T) => void;
+  name: string;
+  changeState: <K extends State>(state: K) => void;
+}
+
+export type {
+  JoinState,
+  AssignState,
+  GameState,
+  State,
+  AssignPlayer,
+  Player,
+  ReactNodeState,
+};

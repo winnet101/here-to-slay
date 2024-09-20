@@ -57,6 +57,12 @@ interface Monster {
   reward: string;
 }
 
+interface Leader {
+  name: string, 
+  type: HeroClass | HeroClass[],
+  effect: string
+}
+
 type Card = HeroCard | MagicCard | ItemCard | ChallengeCard | ModifierCard;
 
-export type { HeroClass, Card, Monster };
+export type { HeroClass, Card, Monster, Leader };
