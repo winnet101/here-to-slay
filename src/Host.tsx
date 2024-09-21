@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
-import { useHostState } from "./hooks/react-use-peer-state";
 import { State } from "./types/gameTypes";
-import Join from "./Join";
 import StringInput from "./lib/StringInput";
-import Assign from "./Assign";
-import { currState, toRemovedArr } from "./lib/utils";
+import { currState } from "./lib/utils";
+import { useHostSynced } from "./hooks/useHostSynced";
 
 function createId(length: number) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -16,46 +13,10 @@ function createId(length: number) {
 }
 
 export default function Host() {
-  const [name, setName] = useState<string>("host");
-  const [id, setId] = useState<string>();
-  const [state, setState, realId, connections] = useHostState<State>(id, {
-    kind: "join",
-    players: [name],
-  });
-
-  useEffect(() => {
-    setId(createId(6));
-  }, []);
-
-  useEffect(() => {
-    if (state.kind !== "join") return;
-
-    connections.forEach((conn) => {
-      conn.on("open", () => {
-        // if (state.kind !== "join") {
-        //   conn.close();
-        //   return;
-        // }
-        setState({ ...state, players: [...state.players, conn.label] });
-      });
-
-      conn.on("close", () => {
-        if (state.kind !== "join") return;
-        setState({
-          ...state,
-          players: [name, ...toRemovedArr(state.players, conn.label)],
-        });
-      });
-    });
-
-    return () => {
-      connections.forEach((connection) => {
-        connection.off("data");
-        connection.off("close");
-        connection.off("error");
-      });
-    };
-  }, [connections]);
+  const { state, setState, name, setName, realId, setId } = useHostSynced(
+    "host",
+    createId(6)
+  );
 
   function changeState<T extends State>(state: T) {
     setState(state);

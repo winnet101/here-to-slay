@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useClientState } from "../hooks/react-use-peer-state";
-import { JoinState, State } from "../types/gameTypes";
-import Join from "../Join";
+import { State } from "../types/gameTypes";
 import StringInput from "../lib/StringInput";
 import { currState } from "../lib/utils";
 

@@ -1,5 +1,5 @@
-import Assign from "../Assign";
-import Join from "../Join";
+import Assign from "../phases/Assign";
+import Join from "../phases/Join";
 import { AssignState, GameState, JoinState, ReactNodeState, State } from "../types/gameTypes";
 
 export function toRemovedArr<T>(arr: T[], target: T) {

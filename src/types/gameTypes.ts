@@ -16,6 +16,23 @@ interface Player {
   maxActionPts: number;
 }
 
+class PlayerClass {
+  name: string;
+  partyLeader: string;
+  hand: Card[];
+  field: Card[];
+  slainMonsters: Monster[] = [];
+  actionPts: number = 3;
+  maxActionPts: number = 3;
+
+  constructor(name:string, partyLeader: string) {
+    this.name = name;
+    this.partyLeader = partyLeader;
+    this.hand = [];
+    this.field = [];
+  }
+}
+
 interface BaseState {
   kind: "join" | "assign" | "play";
 }
@@ -75,3 +92,5 @@ export type {
   Player,
   ReactNodeState,
 };
+
+export {PlayerClass}

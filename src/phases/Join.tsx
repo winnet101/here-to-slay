@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { JoinState, ReactNodeState, State } from "./types/gameTypes";
-import { toRemovedArr } from "./lib/utils";
+import { AssignState, JoinState, ReactNodeState, } from "../types/gameTypes";
 
 export default function Join({
   state,

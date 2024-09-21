@@ -1,7 +1,13 @@
 import { Fragment, ReactNode, useEffect } from "react";
-import { AssignPlayer, AssignState, ReactNodeState } from "./types/gameTypes";
-import { partyLeaders } from "./data/cards";
-import { toReplacedArr } from "./lib/utils";
+import {
+  AssignPlayer,
+  AssignState,
+  Player,
+  PlayerClass,
+  ReactNodeState,
+} from "../types/gameTypes";
+import { partyLeaders } from "../data/cards";
+import { toReplacedArr } from "../lib/utils";
 
 export default function Assign({
   state,
@@ -73,6 +79,27 @@ export default function Assign({
           </Fragment>
         );
       })}
+      <button
+        onClick={() => {
+          const newPlayers = players.map((p) => new PlayerClass(p.name, p.partyLeader))
+
+          changeState({
+            ...state,
+            kind: "play",
+            players: newPlayers,
+            activePlayer: newPlayers[0],
+            phase: "start",
+            deck: [],
+            discard: [],
+            monsterDeck: [],
+            monsterField: [],
+            stack: [],
+            winner: null,
+          });
+        }}
+      >
+        Start Game
+      </button>
 
       <style>
         {`.selected {
