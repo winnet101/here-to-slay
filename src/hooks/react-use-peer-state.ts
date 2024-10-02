@@ -2,6 +2,7 @@
 
 import Peer, { DataConnection } from "peerjs";
 import { useEffect, useRef, useState } from "react";
+import { useImmer } from "use-immer";
 
 /**
  * useState that syncs with a host peer.
@@ -21,7 +22,7 @@ function useClientState<T>(
   name: string,
   initialState?: T,
 ): [T | undefined, (value: T) => void, connected: boolean] {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useImmer(initialState);
   const [peer, setPeer] = useState<Peer>();
   const [connection, setConnection] = useState<DataConnection>();
 
@@ -93,7 +94,7 @@ function useHostState<T>(
 ];
 function useHostState<T>(identifier: string | undefined, initialState?: T) {
   const [id, setId] = useState<string>();
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useImmer(initialState);
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -113,6 +114,7 @@ function useHostState<T>(identifier: string | undefined, initialState?: T) {
     });
 
     setPeer(newPeer);
+
 
     return () => {
       newPeer.destroy();

@@ -1,3 +1,67 @@
+interface BaseAction {
+  kind: ActionKinds;
+  target: Targets;
+  number: number;
+}
+
+interface MultiTargets {
+  from: "any" | "opps";
+  number: number;
+}
+
+type Targets =  MultiTargets | "self" | "all";
+
+type ActionKinds =
+  | "draw"
+  | "select"
+  | "play"
+  | "steal"
+  | "destroy"
+  | "sacrifice"
+  | "discard"
+  | "return"
+  | "reveal"
+  | "pull" // from hand
+  | "trigger" // a hero's ability
+  | "modify" // +X to all rolls until eot
+  | "guard" // cards can't be Xed until next turn
+  | "condition";
+
+interface ConditionAction extends BaseAction {
+  kind: "condition";
+  condition: string;
+}
+
+interface GuardAction extends BaseAction {
+  kind: "guard";
+  guard: "sacrifice" | "steal" | "destroy";
+}
+
+interface ModifyAction extends BaseAction {
+  kind: "modify";
+  modifier: number;
+}
+
+interface SelectAction extends BaseAction {
+  kind: "select";
+  numberToHand: number;
+}
+
+type Action =
+  | BaseAction
+  | GuardAction
+  | ModifyAction
+  | SelectAction
+  | ConditionAction;
+
+type CardKinds =
+  | "hero"
+  | "magic"
+  | "item"
+  | "cursed_item"
+  | "challenge"
+  | "modifier";
+
 type HeroClass =
   | "bard"
   | "wizard"
@@ -6,43 +70,38 @@ type HeroClass =
   | "guardian"
   | "thief";
 
-interface Action {
-  type: string;
-  number: number;
-  condition?: boolean;
-}
-
 interface BaseCard {
-  kind: "hero" | "magic" | "item" | "challenge" | "modifier";
+  kind: CardKinds;
+  name: string;
 }
 
 interface HeroCard extends BaseCard {
   kind: "hero";
-  name: string;
   class: HeroClass;
   minroll: number;
-  action: Action;
+  action: Action[];
+  desc: string;
 }
 
 interface MagicCard extends BaseCard {
   kind: "magic";
-  name: string;
-  action: Action;
+  action: BaseAction;
 }
 
 interface ItemCard extends BaseCard {
-  kind: "item";
-  name: string;
+  kind: "item" | "cursed_item";
   effect: string;
   equippedHero?: string;
 }
 
 interface ChallengeCard extends BaseCard {
   kind: "challenge";
+  name: "challenge";
 }
 
 interface ModifierCard extends BaseCard {
   kind: "modifier";
+  name: "modifier";
   posModifier: 0 | 1 | 2 | 3 | 4;
   negModifier: 0 | 1 | 2 | 3 | 4;
 }
@@ -51,18 +110,18 @@ interface Monster {
   name: string;
   reqs: { number: number; classes?: HeroClass[] };
   lowRoll: number;
-  lowEffect: Action;
+  lowEffect: BaseAction;
   highRoll: number;
-  highEffect: Action;
+  highEffect: BaseAction;
   reward: string;
 }
 
 interface Leader {
-  name: string, 
-  type: HeroClass | HeroClass[],
-  effect: string
+  name: string;
+  type: HeroClass | HeroClass[];
+  effect: string;
 }
 
 type Card = HeroCard | MagicCard | ItemCard | ChallengeCard | ModifierCard;
 
-export type { HeroClass, Card, Monster, Leader };
+export type { HeroClass, Card, Monster, Leader, Action };

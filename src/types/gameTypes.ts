@@ -1,9 +1,9 @@
-import { DataConnection } from "peerjs";
 import { Card, Monster } from "./cardTypes";
 
 interface AssignPlayer {
   name: string;
   partyLeader: string;
+  ready?: boolean;
 }
 
 interface Player {
@@ -47,7 +47,7 @@ interface AssignState extends BaseState {
   players: AssignPlayer[];
 }
 
-interface GameState extends BaseState {
+interface PlayState extends BaseState {
   kind: "play";
   players: Player[];
   activePlayer: Player;
@@ -60,33 +60,33 @@ interface GameState extends BaseState {
   winner: Player | null;
 }
 
-interface ModifierState extends GameState {
+interface ModifierState extends PlayState {
   phase: "modifier";
   currRoll: number;
 }
 
-interface ChallengeState extends GameState {
+interface ChallengeState extends PlayState {
   phase: "challenge";
 }
 
 type State =
   | JoinState
   | AssignState
-  | GameState
+  | PlayState
   | ModifierState
   | ChallengeState;
 
-interface ReactNodeState<T extends State> {
+interface ReactNodeState<T extends State, P extends string | AssignPlayer | Player> {
   state: T;
   setState: (state: T) => void;
-  name: string;
+  currPlayer: P;
   changeState: <K extends State>(state: K) => void;
 }
 
 export type {
   JoinState,
   AssignState,
-  GameState,
+  PlayState,
   State,
   AssignPlayer,
   Player,

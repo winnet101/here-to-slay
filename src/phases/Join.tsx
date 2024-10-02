@@ -1,11 +1,11 @@
-import { AssignState, JoinState, ReactNodeState, } from "../types/gameTypes";
+import { JoinState, ReactNodeState } from "../types/gameTypes";
 
 export default function Join({
-  state,
-  setState,
-  name,
+  state, // @ts-expect-error
+  setState, // @ts-expect-error
+  currPlayer,
   changeState,
-}: ReactNodeState<JoinState>) {
+}: ReactNodeState<JoinState, string>) {
   // const [state, setState, realId, connections] = useHostState<State>(id, {
   //   kind: "join",
   //   players: [name],
@@ -26,6 +26,12 @@ export default function Join({
               partyLeader: "",
             })),
           });
+          console.log(
+            state.players.map((p) => ({
+              name: p,
+              partyLeader: "",
+            }))
+          );
         }}
       >
         Start Game

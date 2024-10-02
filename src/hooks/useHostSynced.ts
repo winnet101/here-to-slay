@@ -2,18 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import { State } from "../types/gameTypes";
 import { useHostState } from "./react-use-peer-state";
 import { toRemovedArr } from "../lib/utils";
+import { useCurrPlayer } from "./useCurrPlayer";
 
 export function useHostSynced(initName: string, initId?: string) {
   const [name, setName] = useState(initName);
-  const [id, setId] = useState<string | undefined>(initId ?? undefined);
+  const [id, _setId] = useState<string | undefined>(initId ?? undefined);
 
   const [state, setState, realId, connections] = useHostState<State>(id, {
     kind: "join",
     players: [name],
   });
 
-  const nameRef = useRef(name)
-  nameRef.current = name
+  const currPlayer = useCurrPlayer(state, name);
+
+  const nameRef = useRef(name);
+  nameRef.current = name;
+
 
   useEffect(() => {
     if (state.kind !== "join") return;
@@ -48,13 +52,12 @@ export function useHostSynced(initName: string, initId?: string) {
   useEffect(() => {
     if (state.kind !== "join") return;
 
-    setState(
-        ({
-          ...state,
-          players: state.players.with(state.players.indexOf(nameRef.current), name),
-        })
-    );
+    setState({
+      ...state,
+      players: state.players.with(state.players.indexOf(nameRef.current), name),
+    });
   }, [name]);
 
-  return { state, setState, name, setName, realId, setId };
+  return { state, setState, setName, currPlayer, realId };
 }
+

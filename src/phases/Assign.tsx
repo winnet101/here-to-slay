@@ -1,38 +1,38 @@
-import { Fragment, ReactNode, useEffect } from "react";
+import { Fragment } from "react";
 import {
   AssignPlayer,
   AssignState,
   Player,
   PlayerClass,
+  PlayState,
   ReactNodeState,
 } from "../types/gameTypes";
-import { partyLeaders } from "../data/cards";
+import { heroCatalog, partyLeaders } from "../data/cards";
 import { toReplacedArr } from "../lib/utils";
 
 export default function Assign({
   state,
   setState,
-  name,
+  currPlayer,
   changeState,
-}: ReactNodeState<AssignState>) {
+}: ReactNodeState<AssignState, AssignPlayer>) {
   const players = state.players.slice();
+  const index = players.map((p) => p.name).indexOf(currPlayer.name);
 
-  function handleClick(leaderName: string) {
-    const index = players.map((p) => p.name).indexOf(name);
-    const targetPlayer = players[index];
-
+  function handleClick(leaderName: string, index: number) {
+    console.log(players.map((p) => p.name));
     if (
       players
-        .filter((p) => p.name !== name)
+        .filter((p) => p.name !== currPlayer.name)
         .map((p) => p.partyLeader)
         .includes(leaderName)
     )
       return;
 
-    if (targetPlayer.partyLeader !== leaderName) {
+    if (currPlayer.partyLeader !== leaderName) {
       console.log(leaderName);
       const targetEdited = {
-        ...targetPlayer,
+        ...currPlayer,
         partyLeader: leaderName,
       };
       setState({
@@ -41,7 +41,7 @@ export default function Assign({
       });
     } else {
       const targetEdited: AssignPlayer = {
-        ...targetPlayer,
+        ...currPlayer,
         partyLeader: "",
       };
       setState({
@@ -51,14 +51,36 @@ export default function Assign({
     }
   }
 
+  function beginPlay() {
+    const newPlayers:Player[] = state.players.map((p) => ({
+      ...p,
+      hand: [],
+      field: [],
+      slainMonsters: [],
+      actionPts: 3,
+      maxActionPts: 3,
+    }))
+    
+    changeState({
+      ...state,
+      kind: "play",
+      players: newPlayers,
+      activePlayer: newPlayers[0], // please be a pointer i beg of you
+      phase: "start",
+      deck: [...heroCatalog],
+      discard: [],
+      monsterDeck: [],
+      monsterField: [],
+      stack: [],
+      winner: null,
+    });
+  }
+
   return (
     <>
       <p>
         Current leader:{" "}
-        {
-          state.players[state.players.map((p) => p.name).indexOf(name)]
-            .partyLeader
-        }
+        {state.players.find((currPlayer) => currPlayer)?.partyLeader}
       </p>
       {partyLeaders.map((lead, i) => {
         const selectedPlayer = players.filter(
@@ -69,7 +91,7 @@ export default function Assign({
           <Fragment key={i}>
             <button
               onClick={() => {
-                handleClick(lead.name);
+                handleClick(lead.name, index);
               }}
               className={`${selectedPlayer && "selected"}`}
             >
@@ -79,26 +101,31 @@ export default function Assign({
           </Fragment>
         );
       })}
-      <button
-        onClick={() => {
-          const newPlayers = players.map((p) => new PlayerClass(p.name, p.partyLeader))
 
-          changeState({
+      <br />
+      <br />
+      <p>{state.players.map(p => p.ready).filter(p => p).length} ready</p><button
+        onClick={() => {
+          const newState = {
             ...state,
-            kind: "play",
-            players: newPlayers,
-            activePlayer: newPlayers[0],
-            phase: "start",
-            deck: [],
-            discard: [],
-            monsterDeck: [],
-            monsterField: [],
-            stack: [],
-            winner: null,
-          });
+            players: players.with(index, {
+              ...currPlayer,
+              ready: !currPlayer.ready,
+            }),
+          };
+
+          setState(newState);
+
+          if (
+            newState.players
+              .map((p) => p.ready)
+              .every((ready) => ready === true)
+          ) {
+            beginPlay();
+          }
         }}
       >
-        Start Game
+        Ready
       </button>
 
       <style>

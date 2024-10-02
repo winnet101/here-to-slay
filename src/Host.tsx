@@ -13,9 +13,9 @@ function createId(length: number) {
 }
 
 export default function Host() {
-  const { state, setState, name, setName, realId, setId } = useHostSynced(
+  const { state, setState, setName, currPlayer, realId } = useHostSynced(
     "host",
-    createId(6)
+    createId(6) + "-h2slay"
   );
 
   function changeState<T extends State>(state: T) {
@@ -24,12 +24,17 @@ export default function Host() {
 
   return (
     <>
-      <p>Id: {realId ?? "Loading..."}</p>
+      <p>Id: {realId?.slice(0, realId.indexOf("-")) ?? "Loading..."}</p>
       <StringInput onSubmit={setName}></StringInput>
+      <code>
+        {typeof currPlayer === 'object' && Object.entries(currPlayer).map(([key, value], i) => (
+          <div key={i}>{key}: {value}</div>
+        ))}
+      </code>
       {currState({
         state: state,
         setState: setState,
-        name: name,
+        currPlayer: currPlayer!,
         changeState: changeState,
       })}
     </>

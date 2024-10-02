@@ -3,6 +3,7 @@ import { useClientState } from "../hooks/react-use-peer-state";
 import { State } from "../types/gameTypes";
 import StringInput from "../lib/StringInput";
 import { currState } from "../lib/utils";
+import { useCurrPlayer } from "../hooks/useCurrPlayer";
 
 export default function Client() {
   const [host, setHost] = useState<string>();
@@ -12,6 +13,8 @@ export default function Client() {
     name
   );
 
+  const currPlayer = useCurrPlayer(state, name);
+
   function changeState<T extends State>(state: T) {
     setState(state);
   }
@@ -20,7 +23,7 @@ export default function Client() {
     <>
       <p>
         {name ? `Current name: ${name}` : "Choose a name"}{" "}
-        <StringInput onSubmit={(name) => setName(name)} />
+        <StringInput onSubmit={setName} />
       </p>
 
       {connected ? (
@@ -28,7 +31,7 @@ export default function Client() {
           {currState({
             state: state ?? { kind: "join", players: [] },
             setState: setState,
-            name: name,
+            currPlayer: currPlayer ?? "",
             changeState: changeState,
           })}
         </>
@@ -37,7 +40,9 @@ export default function Client() {
           {name && (
             <>
               <p>Input host id:</p>
-              <StringInput onSubmit={setHost} />
+              <StringInput onSubmit={(host) => {
+                setHost(host + "-h2slay")
+              }} />
             </>
           )}
         </>
