@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { ReactNodeState, PlayState, Player } from "../types/gameTypes";
-import { mapObject } from "../lib/utils";
+import { mapObject} from "../lib/utils";
 
 export default function Play({
   state,
@@ -12,6 +12,7 @@ export default function Play({
       const newCards = state.deck.slice(0, num);
       console.log(newCards);
       const p = state.players.find(p => p.name === currPlayer.name)!
+      // const p = currPlayer
 
       setState({
         ...state,
@@ -19,7 +20,7 @@ export default function Play({
         players: state.players.with(
           state.players.map((p) => p.name).indexOf(currPlayer.name),
           {
-            ...p,
+            ...currPlayer,
             hand: [...p.hand, ...newCards]
           }
         ),
@@ -42,9 +43,9 @@ export default function Play({
         Draw Card
       </button>
       <div>
-        {/* ACTUAL: {mapObject(state.activePlayer)}
+        ACTUAL: {mapObject(state.activePlayer)}
         <br></br>
-        CURRPLAYER: {mapObject(currPlayer)} */}
+        CURRPLAYER: {mapObject(currPlayer)}
       </div>
     </>
   );

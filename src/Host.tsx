@@ -1,6 +1,6 @@
 import { State } from "./types/gameTypes";
 import StringInput from "./lib/StringInput";
-import { currState } from "./lib/utils";
+import { currState, mapObject } from "./lib/utils";
 import { useHostSynced } from "./hooks/useHostSynced";
 
 function createId(length: number) {
@@ -27,9 +27,7 @@ export default function Host() {
       <p>Id: {realId?.slice(0, realId.indexOf("-")) ?? "Loading..."}</p>
       <StringInput onSubmit={setName}></StringInput>
       <code>
-        {typeof currPlayer === 'object' && Object.entries(currPlayer).map(([key, value], i) => (
-          <div key={i}>{key}: {value}</div>
-        ))}
+        {mapObject(typeof currPlayer === "object" ? currPlayer : {})};
       </code>
       {currState({
         state: state,

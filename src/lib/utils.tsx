@@ -26,7 +26,7 @@ export function toReplacedArr<T>(arr: T[], i: number, newValue: T) {
 
 export function currState<
   T extends State,
-  P extends string | AssignPlayer | Player
+  P extends string | AssignPlayer | Player,
 >(props: ReactNodeState<T, P>) {
   switch (props.state.kind) {
     case "join":
@@ -64,12 +64,21 @@ export function returnShuffledArr<T>(arr: T[]) {
   return newArr;
 }
 
-export function mapObject<T extends object>(obj: T) {
+export function mapObject<T extends object>(obj: T, unwrap: boolean = false) {
   return (
     typeof obj === "object" &&
     Object.entries(obj).map(([key, value], i) => (
       <div key={i}>
-        {key}: {typeof value === "object" ? mapObject(value) : value}
+        {key}:{" "}
+        {value
+          ? typeof value === "object"
+            ? Array.isArray(value)
+              ? value.map((v) => mapObject(v))
+              : unwrap
+                ? mapObject(value)
+                : "[Object]"
+            : value
+          : ""}
       </div>
     ))
   );

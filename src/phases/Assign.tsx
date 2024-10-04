@@ -3,8 +3,6 @@ import {
   AssignPlayer,
   AssignState,
   Player,
-  PlayerClass,
-  PlayState,
   ReactNodeState,
 } from "../types/gameTypes";
 import { heroCatalog, partyLeaders } from "../data/cards";
