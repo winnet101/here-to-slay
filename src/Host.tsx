@@ -1,6 +1,6 @@
 import { State } from "./types/gameTypes";
 import StringInput from "./lib/StringInput";
-import { currState, mapObject } from "./lib/utils";
+import { currState } from "./lib/utils";
 import { useHostSynced } from "./hooks/useHostSynced";
 
 function createId(length: number) {
@@ -13,7 +13,7 @@ function createId(length: number) {
 }
 
 export default function Host() {
-  const { state, setState, setName, currPlayer, realId } = useHostSynced(
+  const { state, setState, setName, name, realId } = useHostSynced(
     "host",
     createId(6) + "-h2slay"
   );
@@ -26,13 +26,10 @@ export default function Host() {
     <>
       <p>Id: {realId?.slice(0, realId.indexOf("-")) ?? "Loading..."}</p>
       <StringInput onSubmit={setName}></StringInput>
-      <code>
-        {mapObject(typeof currPlayer === "object" ? currPlayer : {})};
-      </code>
       {currState({
         state: state,
         setState: setState,
-        currPlayer: currPlayer!,
+        name: name,
         changeState: changeState,
       })}
     </>

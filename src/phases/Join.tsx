@@ -1,11 +1,11 @@
 import { JoinState, ReactNodeState } from "../types/gameTypes";
 
 export default function Join({
-  state, // @ts-expect-error
-  setState, // @ts-expect-error
-  currPlayer,
+  state,
+  setState,
+  name,
   changeState,
-}: ReactNodeState<JoinState, string>) {
+}: ReactNodeState<JoinState>) {
   // const [state, setState, realId, connections] = useHostState<State>(id, {
   //   kind: "join",
   //   players: [name],

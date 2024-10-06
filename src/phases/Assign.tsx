@@ -7,21 +7,24 @@ import {
 } from "../types/gameTypes";
 import { heroCatalog, partyLeaders } from "../data/cards";
 import { toReplacedArr } from "../lib/utils";
+import { useCurrPlayer } from "../hooks/useCurrPlayer";
 
 export default function Assign({
   state,
   setState,
-  currPlayer,
+  name,
   changeState,
-}: ReactNodeState<AssignState, AssignPlayer>) {
+}: ReactNodeState<AssignState>) {
+
+  const currPlayer = useCurrPlayer<AssignPlayer>(state, name);
   const players = state.players.slice();
-  const index = players.map((p) => p.name).indexOf(currPlayer.name);
+  const index = players.map((p) => p.name).indexOf(name);
 
   function handleClick(leaderName: string, index: number) {
     console.log(players.map((p) => p.name));
     if (
       players
-        .filter((p) => p.name !== currPlayer.name)
+        .filter((p) => p.name !== name)
         .map((p) => p.partyLeader)
         .includes(leaderName)
     )
@@ -63,7 +66,7 @@ export default function Assign({
       ...state,
       kind: "play",
       players: newPlayers,
-      activePlayer: newPlayers[0], // please be a pointer i beg of you
+      activePlayerName: newPlayers[0].name, // please be a pointer i beg of you
       phase: "start",
       deck: [...heroCatalog],
       discard: [],

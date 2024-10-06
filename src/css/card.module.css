@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Patua+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+.card {
+  --minroll-width: 1.75rem;
+  border-radius: 2px;
+  border: black 0.25rem solid;
+  min-width: 10rem;
+  max-width: 10rem;
+  min-height: 13rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardheader {
+  font-family: "Patua One";
+  font-weight: 400;
+  margin: inherit;
+}
+
+.cardsub {
+  text-transform: capitalize;
+}
+
+.cardheader,
+.cardsub {
+  text-align: center;
+}
+
+.desc {
+  font-size: 1.1em;
+}
+
+.descContainer {
+  display: grid;
+  grid-template-columns: var(--minroll-width) auto;
+  padding: 0.75rem;
+  column-gap: 0.5rem;
+  align-items: center;
+}
+
+.heroMinroll {
+  background-color: rgb(118, 201, 59);
+  height: var(--minroll-width);
+  width: var(--minroll-width);
+  border-radius: 15%;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.1s, color 0.1s, border 0.1s;
+}
+
+.heroMinroll:hover {
+  background-color: rgb(85, 164, 45);
+}
+
+.heroMinroll:active {
+  background-color:  rgb(206, 255, 147);
+  color: black;
+  border-color: white;
+}

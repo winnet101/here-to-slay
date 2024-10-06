@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AssignPlayer, Player, State } from "../types/gameTypes";
 
-export function useCurrPlayer(state: State | undefined, name: string): string | AssignPlayer | Player | undefined {
+export function useCurrPlayer<T extends string | AssignPlayer | Player>(state: State | undefined, name: string): T {
   const [currPlayer, setCurrPlayer]= useState( findCurrPlayer(state, name));
 
 
@@ -9,7 +9,7 @@ export function useCurrPlayer(state: State | undefined, name: string): string | 
     setCurrPlayer(findCurrPlayer(state, name));
   }, [state, name]);
 
-  return currPlayer;
+  return currPlayer as T;
 }
 
 function findCurrPlayer(state: State | undefined, name: string) {

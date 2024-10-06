@@ -50,7 +50,7 @@ interface AssignState extends BaseState {
 interface PlayState extends BaseState {
   kind: "play";
   players: Player[];
-  activePlayer: Player;
+  activePlayerName: string;
   phase: "start" | "action" | "challenge" | "modifier" | "resolution" | "end";
   deck: Card[];
   discard: Card[];
@@ -76,10 +76,10 @@ type State =
   | ModifierState
   | ChallengeState;
 
-interface ReactNodeState<T extends State, P extends string | AssignPlayer | Player> {
+interface ReactNodeState<T extends State> {
   state: T;
   setState: (state: T) => void;
-  currPlayer: P;
+  name: string;
   changeState: <K extends State>(state: K) => void;
 }
 

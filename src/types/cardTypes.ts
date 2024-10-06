@@ -73,6 +73,7 @@ type HeroClass =
 interface BaseCard {
   kind: CardKinds;
   name: string;
+  desc: string;
 }
 
 interface HeroCard extends BaseCard {
@@ -80,7 +81,6 @@ interface HeroCard extends BaseCard {
   class: HeroClass;
   minroll: number;
   action: Action[];
-  desc: string;
 }
 
 interface MagicCard extends BaseCard {
